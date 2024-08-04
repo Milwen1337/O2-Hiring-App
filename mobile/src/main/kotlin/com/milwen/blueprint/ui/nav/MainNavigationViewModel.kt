@@ -6,14 +6,13 @@ import androidx.navigation.NavHostController
 import com.milwen.blueprint.base.navigation.NavDestination
 import com.milwen.blueprint.base.navigation.NavDestinationPayload
 import com.milwen.blueprint.ui.architecture.BaseViewModel
-import com.milwen.blueprint.ui.screen.intro.IntroScreen
-import com.milwen.blueprint.ui.screen.payloadtestscreen.PayloadTestPayload
-import com.milwen.blueprint.ui.screen.payloadtestscreen.PayloadTestScreen
+import com.milwen.blueprint.ui.screen.scratch.ScratchScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 object MainDestination {
 
+    /*
     data object Intro : NavDestination {
         override val path: String = "intro"
         override val content: @Composable (navHostController: NavHostController) -> Unit = {
@@ -27,6 +26,13 @@ object MainDestination {
             PayloadTestScreen(hiltViewModel())
         }
         override val payloadClazz: Class<PayloadTestPayload> = PayloadTestPayload::class.java
+    }*/
+
+    data object Scratch : NavDestination {
+        override val path: String = "scratch"
+        override val content: @Composable (navHostController: NavHostController) -> Unit = {
+            ScratchScreen(hiltViewModel())
+        }
     }
 }
 
@@ -36,8 +42,7 @@ class MainNavigationViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val destinations = listOf(
-        MainDestination.Intro,
-        MainDestination.PayloadTest,
+        MainDestination.Scratch,
     )
 
     val startDestination = destinations.first()
