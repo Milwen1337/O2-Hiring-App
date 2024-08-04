@@ -10,4 +10,5 @@ android {
 dependencies {
     implementation(project(":core:base"))
     implementation(project(":domain"))
+    implementation(libs.gson)
 }

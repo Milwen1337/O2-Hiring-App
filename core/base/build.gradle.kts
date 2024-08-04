@@ -11,4 +11,5 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     api(libs.androidx.compose.hilt.navigation)
     api(libs.kotlinx.coroutines.playservices)
+    implementation(libs.gson)
 }
