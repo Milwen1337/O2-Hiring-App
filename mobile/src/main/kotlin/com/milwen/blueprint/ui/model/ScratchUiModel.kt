@@ -6,28 +6,38 @@ import com.milwen.blueprint.model.ScratchCardState
 @Immutable
 data class ScratchUiModel(
     var cardId: String? = null,
-    var scratchCardUiState: ScratchCardUiState = ScratchCardUiState.Unscratched
+    var scratchCardUiState: ScratchCardUiState = ScratchCardUiState.Unscratched(),
+    var progressState: ProgressState = ProgressState.Finished
 )
 
 sealed interface ScratchCardUiState {
+    val value: String
+    data class Unscratched(override val value: String = "unscratched"): ScratchCardUiState
 
-    data object Unscratched: ScratchCardUiState
 
-    data object Scratched: ScratchCardUiState
+    data class Scratched(override val value: String = "scratched"): ScratchCardUiState
 
-    data object Activated: ScratchCardUiState
+    data class Activated(override val value: String = "activated"): ScratchCardUiState
+}
+
+sealed interface ProgressState {
+
+    data object InProgress: ProgressState
+
+    data object Finished: ProgressState
+
 }
 
 fun ScratchCardState.toScratchCardState() =
     when(this) {
-        ScratchCardState.Unscratched -> ScratchCardUiState.Unscratched
-        ScratchCardState.Scratched -> ScratchCardUiState.Scratched
-        ScratchCardState.Activated -> ScratchCardUiState.Activated
+        ScratchCardState.Unscratched -> ScratchCardUiState.Unscratched()
+        ScratchCardState.Scratched -> ScratchCardUiState.Scratched()
+        ScratchCardState.Activated -> ScratchCardUiState.Activated()
     }
 
 fun ScratchCardUiState.toScratchCardState() =
     when(this) {
-        ScratchCardUiState.Unscratched -> ScratchCardState.Unscratched
-        ScratchCardUiState.Scratched -> ScratchCardState.Scratched
-        ScratchCardUiState.Activated -> ScratchCardState.Activated
+        is ScratchCardUiState.Unscratched -> ScratchCardState.Unscratched
+        is ScratchCardUiState.Scratched -> ScratchCardState.Scratched
+        is ScratchCardUiState.Activated -> ScratchCardState.Activated
     }

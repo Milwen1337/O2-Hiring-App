@@ -1,12 +1,9 @@
-package com.milwen.blueprint.ui.screen.scratch
+package com.milwen.blueprint.ui.screen.activation
 
-import com.milwen.blueprint.model.ScratchCardModel
 import com.milwen.blueprint.repository.ScratchCardRepository
 import com.milwen.blueprint.ui.architecture.BaseViewModel
-import com.milwen.blueprint.ui.model.ScratchCardUiState
-import com.milwen.blueprint.ui.model.ScratchUiModel
+import com.milwen.blueprint.ui.model.ActivationUiModel
 import com.milwen.blueprint.ui.model.toScratchCardState
-import com.milwen.blueprint.usecase.GenerateScratchCardCodeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,12 +11,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ScratchViewModel @Inject constructor(
+class ActivationViewModel @Inject constructor(
     private val scratchCardRepository: ScratchCardRepository,
-    private val generateScratchCardCodeUseCase: GenerateScratchCardCodeUseCase,
 ) : BaseViewModel() {
 
-    private val _state: MutableStateFlow<ScratchUiModel> = MutableStateFlow(ScratchUiModel())
+    private val _state: MutableStateFlow<ActivationUiModel> = MutableStateFlow(ActivationUiModel())
     val state = _state.asStateFlow()
 
     init {
@@ -39,14 +35,11 @@ class ScratchViewModel @Inject constructor(
         }
     }
 
-    fun scratchCard(){
+    fun activateCard(code: String) {
         launch {
-            generateScratchCardCodeUseCase.generate().collect { scratchId ->
-                state.value.apply {
-                    cardId = scratchId
-                    scratchCardUiState = ScratchCardUiState.Scratched()
-                }
-                scratchCardRepository.setScratchCard(ScratchCardModel(state.value.cardId, state.value.scratchCardUiState.toScratchCardState()))
+            val response = scratchCardRepository.activateScratchCard(code)
+            if (response.isActivated){
+
             }
         }
     }

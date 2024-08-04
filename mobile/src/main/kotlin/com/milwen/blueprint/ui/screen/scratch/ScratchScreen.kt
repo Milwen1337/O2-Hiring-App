@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -24,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.milwen.blueprint.ui.compose.MainScreen
 import com.milwen.blueprint.ui.compose.PrimaryButton
 import com.milwen.blueprint.ui.compose.ThemedPreview
+import com.milwen.blueprint.ui.model.ProgressState
 import com.milwen.blueprint.ui.model.ScratchCardUiState
 import com.milwen.blueprint.ui.model.ScratchUiModel
 import com.milwen.blueprint.ui.theme.MainTheme
@@ -68,13 +71,21 @@ private fun ScratchScreenContent(
     ) {
         ScratchCard(state = state)
 
-        if (state.scratchCardUiState == ScratchCardUiState.Unscratched){
-            ScratchButton(
-                text = "Scratch",
-                onClick = { listener.onCardScratch() },
-            )
+        when(state.progressState){
+            ProgressState.Finished -> {
+                if (state.scratchCardUiState is ScratchCardUiState.Unscratched){
+                    ScratchButton(
+                        text = "Scratch",
+                        onClick = { listener.onCardScratch() },
+                    )
+                }
+            }
+            ProgressState.InProgress -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(26.dp)
+                )
+            }
         }
-
     }
 }
 
@@ -85,13 +96,13 @@ private fun ScratchCard(
     Card(
         colors = CardDefaults.cardColors(
             containerColor = when(state.scratchCardUiState){
-                ScratchCardUiState.Activated -> {
+                is ScratchCardUiState.Activated -> {
                     MainTheme.colors.brand.green
                 }
-                ScratchCardUiState.Scratched -> {
+                is ScratchCardUiState.Scratched -> {
                     MainTheme.colors.brand.blue
                 }
-                ScratchCardUiState.Unscratched -> {
+                is ScratchCardUiState.Unscratched -> {
                     MainTheme.colors.surface.tertiary
                 }
             },
@@ -102,13 +113,13 @@ private fun ScratchCard(
             .heightIn(min = 56.dp),
     ){
         when(state.scratchCardUiState){
-            ScratchCardUiState.Activated -> {
+            is ScratchCardUiState.Activated -> {
                 ScratchText(text = state.cardId?:"")
             }
-            ScratchCardUiState.Scratched -> {
+            is ScratchCardUiState.Scratched -> {
                 ScratchText(text = state.cardId?:"")
             }
-            ScratchCardUiState.Unscratched -> {}
+            is ScratchCardUiState.Unscratched -> {}
         }
     }
 }
@@ -151,7 +162,7 @@ private fun ScratchButton(
 private fun PreviewScratchScreen(){
     ThemedPreview {
         ScratchScreenContent(
-            state = ScratchUiModel(cardId = "22238", scratchCardUiState = ScratchCardUiState.Activated),
+            state = ScratchUiModel(cardId = "22238", scratchCardUiState = ScratchCardUiState.Activated()),
             listener = object : ScratchCardListener {
                 override fun onCardScratch() {}
             }

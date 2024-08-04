@@ -21,15 +21,11 @@ enum class AppFlavor(
     val dimension: FlavorDimension,
     val applicationIdSuffix: String? = null,
     val core: ApiEndpoint,
-    val search: ApiEndpoint,
-    val payment: ApiEndpoint,
 ) {
     dev(
         dimension = FlavorDimension.contentType,
         applicationIdSuffix = ".blueprint.dev",
-        core = ApiEndpoint(apiName = "core_api", url = "https://blueprintbe-dev.milwen.sk", apiKey = "79c5a14d-3f44-4820-9373-56c59fdb962f"),
-        search = ApiEndpoint(apiName = "search_api", url = "https://blueprintbe-search-dev.milwen.sk", apiKey = "d1c9e37f-5c92-4f4e-93b4-2a7bf30a6e9b"),
-        payment = ApiEndpoint(apiName = "payment_api", url = "https://blueprintbe-payment-dev.milwen.sk", apiKey = "eaf6c91e-c93b-4d60-91de-13bb94d7fc95")
+        core = ApiEndpoint(apiName = "core_api", url = "https://api.o2.sk/", apiKey = ""),
     )/*,
     prod_test(
         dimension = FlavorDimension.contentType,
@@ -66,12 +62,6 @@ fun Project.configureFlavors(
                         this.apply {
                             buildConfigField("String", "${flavor.core.apiName}_${flavor.core::url.name}", "\"${flavor.core.url}\"")
                             buildConfigField("String", "${flavor.core.apiName}_${flavor.core::apiKey.name}", "\"${flavor.core.apiKey}\"")
-
-                            buildConfigField("String", "${flavor.search.apiName}_${flavor.search::url.name}", "\"${flavor.search.url}\"")
-                            buildConfigField("String", "${flavor.search.apiName}_${flavor.search::apiKey.name}", "\"${flavor.search.apiKey}\"")
-
-                            buildConfigField("String", "${flavor.payment.apiName}_${flavor.payment::url.name}", "\"${flavor.payment.url}\"")
-                            buildConfigField("String", "${flavor.payment.apiName}_${flavor.payment::apiKey.name}", "\"${flavor.payment.apiKey}\"")
                         }
                     }
                 }
