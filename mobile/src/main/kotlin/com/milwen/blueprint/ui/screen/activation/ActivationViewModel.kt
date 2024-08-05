@@ -1,5 +1,6 @@
 package com.milwen.blueprint.ui.screen.activation
 
+import android.util.Log
 import com.milwen.blueprint.model.ScratchCardModel
 import com.milwen.blueprint.repository.ScratchCardRepository
 import com.milwen.blueprint.ui.architecture.BaseViewModel
@@ -31,10 +32,7 @@ class ActivationViewModel @Inject constructor(
             scratchCardRepository.getScratchCard().let { model ->
                 model?.let {
                     _state.update {
-                        ActivationUiModel(
-                            cardId = model.id,
-                            scratchCardUiState = model.state.toScratchCardState(),
-                        )
+                        it.copy(cardId = model.id, scratchCardUiState = model.state.toScratchCardState())
                     }
                 }
             }
@@ -43,12 +41,17 @@ class ActivationViewModel @Inject constructor(
 
     fun activateCard(code: String) {
         _state.update { it.copy(activationState = ActivationState.InProgress) }
+        Log.i("ViewModel", "ActivationViewModel: activateCard: inProgress")
         launch {
             val response = scratchCardRepository.activateScratchCard(code)
+            Log.i("ViewModel", "ActivationViewModel: activateCard: response")
             if (response.isActivated){
+                Log.i("ViewModel", "ActivationViewModel: activateCard: response -> isActivated")
                 _state.update { it.copy(scratchCardUiState = ScratchCardUiState.Activated()) }
+
                 scratchCardRepository.setScratchCard(ScratchCardModel(state.value.cardId, state.value.scratchCardUiState.toScratchCardState()))
             } else {
+                Log.i("ViewModel", "ActivationViewModel: activateCard: response -> isNotActivated")
                 _state.update { it.copy(showError = true) }
             }
             _state.update { it.copy(activationState = ActivationState.Finished) }

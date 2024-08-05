@@ -14,7 +14,6 @@ sealed interface ScratchCardUiState {
     val value: String
     data class Unscratched(override val value: String = "unscratched"): ScratchCardUiState
 
-
     data class Scratched(override val value: String = "scratched"): ScratchCardUiState
 
     data class Activated(override val value: String = "activated"): ScratchCardUiState

@@ -1,6 +1,7 @@
 package com.milwen.blueprint.core.db
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.GsonBuilder
 import com.milwen.blueprint.base.datastore.DatastorePreferences
 import com.milwen.blueprint.model.ScratchCardModel
@@ -30,6 +31,7 @@ class ScratchCardPreferences @Inject constructor(
 
     fun setScratchCard(scratchCardModel: ScratchCardModel) {
         val jsonString = gson.toJson(scratchCardModel)
+        Log.i("ViewModel", "setScratchCard: ${jsonString}")
         sharedPreferences.edit().putString(SCRATCH_CARD_KEY, jsonString).apply()
     }
 

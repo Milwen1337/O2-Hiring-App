@@ -1,5 +1,6 @@
 package com.milwen.blueprint.ui.screen.menu
 
+import android.util.Log
 import com.milwen.blueprint.repository.ScratchCardRepository
 import com.milwen.blueprint.ui.architecture.BaseViewModel
 import com.milwen.blueprint.ui.model.MenuUiModel
@@ -23,14 +24,14 @@ class MenuViewModel @Inject constructor(
         loadData()
     }
 
-    private fun loadData() {
+    fun loadData() {
         launch {
             scratchCardRepository.getScratchCard().let { model ->
+                Log.i("ViewModel", "MenuViewModel: isNull = ${model == null}")
                 model?.let {
+                    Log.i("ViewModel", "MenuViewModel: MenuScratchCardState: ${model.state}")
                     _state.update {
-                        MenuUiModel(
-                            scratchCardUiState = model.state.toScratchCardState(),
-                        )
+                        it.copy(scratchCardUiState = model.state.toScratchCardState())
                     }
                 }
             }

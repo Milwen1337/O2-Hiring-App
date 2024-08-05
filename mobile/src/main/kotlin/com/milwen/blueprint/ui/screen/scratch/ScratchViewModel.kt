@@ -1,5 +1,6 @@
 package com.milwen.blueprint.ui.screen.scratch
 
+import android.util.Log
 import com.milwen.blueprint.model.ScratchCardModel
 import com.milwen.blueprint.repository.ScratchCardRepository
 import com.milwen.blueprint.ui.architecture.BaseViewModel
@@ -33,10 +34,7 @@ class ScratchViewModel @Inject constructor(
             scratchCardRepository.getScratchCard().let { model ->
                 model?.let {
                     _state.update {
-                        ScratchUiModel(
-                            cardId = model.id,
-                            scratchCardUiState = model.state.toScratchCardState(),
-                        )
+                        it.copy(cardId = model.id, scratchCardUiState = model.state.toScratchCardState())
                     }
                 }
             }
@@ -44,11 +42,14 @@ class ScratchViewModel @Inject constructor(
     }
 
     fun scratchCard(){
+        Log.i("ViewModel", "ScratchViewModel: scratchCard")
         _state.update { it.copy(progressState = ProgressState.InProgress) }
         launch {
             generateScratchCardCodeUseCase.generate().collect { scratchId ->
-                _state.update { it.copy(cardId = scratchId, scratchCardUiState = ScratchCardUiState.Scratched(), progressState = ProgressState.Finished) }
+                Log.i("ViewModel", "ScratchViewModel: scratchCard: result: ${scratchId}")
+                _state.update { it.copy(cardId = scratchId, scratchCardUiState = ScratchCardUiState.Scratched()) }
                 scratchCardRepository.setScratchCard(ScratchCardModel(state.value.cardId, state.value.scratchCardUiState.toScratchCardState()))
+                _state.update { it.copy(progressState = ProgressState.Finished) }
             }
         }
     }
