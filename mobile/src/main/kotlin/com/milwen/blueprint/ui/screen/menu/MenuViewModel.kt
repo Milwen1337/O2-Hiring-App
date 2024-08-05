@@ -22,6 +22,7 @@ class MenuViewModel @Inject constructor(
 
     init {
         loadData()
+        observeScratchCard()
     }
 
     fun loadData() {
@@ -30,6 +31,18 @@ class MenuViewModel @Inject constructor(
                 Log.i("ViewModel", "MenuViewModel: isNull = ${model == null}")
                 model?.let {
                     Log.i("ViewModel", "MenuViewModel: MenuScratchCardState: ${model.state}")
+                    _state.update {
+                        it.copy(scratchCardUiState = model.state.toScratchCardState())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeScratchCard() {
+        launch {
+            scratchCardRepository.getScratchCardFlow().collect { model ->
+                model?.let {
                     _state.update {
                         it.copy(scratchCardUiState = model.state.toScratchCardState())
                     }

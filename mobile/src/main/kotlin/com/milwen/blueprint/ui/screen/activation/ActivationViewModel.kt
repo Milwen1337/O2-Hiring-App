@@ -9,6 +9,10 @@ import com.milwen.blueprint.ui.model.ActivationUiModel
 import com.milwen.blueprint.ui.model.ScratchCardUiState
 import com.milwen.blueprint.ui.model.toScratchCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -22,6 +26,8 @@ class ActivationViewModel @Inject constructor(
 
     private val _state: MutableStateFlow<ActivationUiModel> = MutableStateFlow(ActivationUiModel())
     val state = _state.asStateFlow()
+
+    private val externalScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     init {
         loadData()
@@ -42,7 +48,7 @@ class ActivationViewModel @Inject constructor(
     fun activateCard(code: String) {
         _state.update { it.copy(activationState = ActivationState.InProgress) }
         Log.i("ViewModel", "ActivationViewModel: activateCard: inProgress")
-        launch {
+        externalScope.launch {
             val response = scratchCardRepository.activateScratchCard(code)
             Log.i("ViewModel", "ActivationViewModel: activateCard: response")
             if (response.isActivated){

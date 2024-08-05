@@ -8,6 +8,8 @@ interface ScratchCardRepository {
 
     fun getScratchCard(): ScratchCardModel?
 
+    suspend fun getScratchCardFlow(): Flow<ScratchCardModel?>
+
     fun setScratchCard(scratchCard: ScratchCardModel)
 
     suspend fun activateScratchCard(code: String): ScratchCardActivationResponseModel
