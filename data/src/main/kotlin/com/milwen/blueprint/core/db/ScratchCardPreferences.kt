@@ -1,8 +1,10 @@
 package com.milwen.blueprint.core.db
 
 import android.content.Context
+import com.google.gson.GsonBuilder
 import com.milwen.blueprint.base.datastore.DatastorePreferences
 import com.milwen.blueprint.model.ScratchCardModel
+import com.milwen.blueprint.model.ScratchCardState
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +15,13 @@ private const val SCRATCH_CARD_KEY = "scratch_card_key"
 @Singleton
 class ScratchCardPreferences @Inject constructor(
     @ApplicationContext context: Context,
-): DatastorePreferences(context, DATASTORE_NAME) {
+): DatastorePreferences(
+    context,
+    DATASTORE_NAME,
+    GsonBuilder()
+        .registerTypeAdapter(ScratchCardState::class.java, ScratchCardStateTypeAdapter())
+        .create()
+) {
 
     fun getScratchCard(): ScratchCardModel? {
         val jsonString = sharedPreferences.getString(SCRATCH_CARD_KEY, null)

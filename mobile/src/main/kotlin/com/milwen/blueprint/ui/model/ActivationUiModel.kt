@@ -5,7 +5,7 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class ActivationUiModel(
     var cardId: String? = null,
-    var showWarning: Boolean = false,
+    var showError: Boolean = false,
     var scratchCardUiState: ScratchCardUiState = ScratchCardUiState.Unscratched(),
     var activationState: ActivationState = ActivationState.Default,
 )

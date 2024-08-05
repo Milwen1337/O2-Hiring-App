@@ -23,9 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.milwen.blueprint.ui.compose.AppBarNavigation
 import com.milwen.blueprint.ui.compose.MainScreen
 import com.milwen.blueprint.ui.compose.PrimaryButton
 import com.milwen.blueprint.ui.compose.ThemedPreview
+import com.milwen.blueprint.ui.compose.rememberBackHandler
 import com.milwen.blueprint.ui.model.ProgressState
 import com.milwen.blueprint.ui.model.ScratchCardUiState
 import com.milwen.blueprint.ui.model.ScratchUiModel
@@ -41,6 +43,7 @@ fun ScratchScreen(
     viewModel: ScratchViewModel,
 ) {
     val data = viewModel.state.collectAsStateWithLifecycle()
+    val backHandler = rememberBackHandler()
     val listener = object : ScratchCardListener {
         override fun onCardScratch() {
             viewModel.scratchCard()
@@ -48,7 +51,8 @@ fun ScratchScreen(
     }
 
     MainScreen(
-        title = "Scratch Card"
+        title = "Scratch Card",
+        navigation = AppBarNavigation.Button.Up(backHandler::navigateBack)
     ) {
         ScratchScreenContent(
             state = data.value,

@@ -7,6 +7,7 @@ import com.milwen.blueprint.ui.model.toScratchCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,10 +25,12 @@ class MenuViewModel @Inject constructor(
 
     private fun loadData() {
         launch {
-            scratchCardRepository.getScratchCard().collect { model->
+            scratchCardRepository.getScratchCard().let { model ->
                 model?.let {
-                    state.value.apply {
-                        scratchCardUiState = model.state.toScratchCardState()
+                    _state.update {
+                        MenuUiModel(
+                            scratchCardUiState = model.state.toScratchCardState(),
+                        )
                     }
                 }
             }

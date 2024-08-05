@@ -5,6 +5,7 @@ import com.milwen.blueprint.core.db.ScratchCardPreferences
 import com.milwen.blueprint.model.ScratchCardActivationResponseModel
 import com.milwen.blueprint.model.ScratchCardModel
 import com.milwen.blueprint.repository.ScratchCardRepository
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
@@ -15,9 +16,7 @@ class ScratchCardRepositoryImpl @Inject constructor(
     private val preferences: ScratchCardPreferences,
     private val activationAPI: ScratchCardActivationAPI,
 ): ScratchCardRepository {
-    override fun getScratchCard(): Flow<ScratchCardModel?> = callbackFlow {
-        preferences.getScratchCard()
-    }
+    override fun getScratchCard(): ScratchCardModel? = preferences.getScratchCard()
 
     override fun setScratchCard(scratchCard: ScratchCardModel) {
         preferences.setScratchCard(scratchCard)
@@ -32,7 +31,7 @@ class ScratchCardRepositoryImpl @Inject constructor(
                 .firstOrNull()
 
             response?.let {
-                ScratchCardActivationResponseModel(isActivated = true)
+                ScratchCardActivationResponseModel(isActivated = it.android > 277028)
             } ?: ScratchCardActivationResponseModel(isActivated = false)
 
         } catch (e: Exception) {

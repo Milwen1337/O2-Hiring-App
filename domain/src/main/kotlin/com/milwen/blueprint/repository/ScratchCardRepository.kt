@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ScratchCardRepository {
 
-    fun getScratchCard(): Flow<ScratchCardModel?>
+    fun getScratchCard(): ScratchCardModel?
 
     fun setScratchCard(scratchCard: ScratchCardModel)
 
